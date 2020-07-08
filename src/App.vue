@@ -1,28 +1,31 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h1>Tabata Timer</h1> 
+    <section class="container">
+      <Options/>
+      <button type="button">Start</button>
+    </section>
+    
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Options from './components/Options.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Options
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+
+h1{
+  text-align:center;
+}
+.container{
+  margin:5% 10%;
 }
 </style>
