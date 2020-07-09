@@ -9,13 +9,21 @@
          </template>
        </Option>
        <Option :option_name="{name:'Work'}">
-         <h5 slot="value">{{work}}</h5>
+         <h5 slot="value">{{workTime}}</h5>
+         <template slot="options">
+           <button type="button" @click="addWorkTime">+</button>
+           <button type="button" @click="deleteWorkTime">-</button>
+         </template>
        </Option>
        <Option :option_name="{name:'Rest'}">
-         <h5 slot="value">{{rest}}</h5>
+         <h5 slot="value">{{restTime}}</h5>
+         <template slot="options">
+           <button type="button" @click="addRestTime">+</button>
+           <button type="button" @click="deleteRestTime">-</button>
+         </template>
        </Option>
        <Option :option_name="{name:'Time'}">
-         <h5 slot="value">{{time}}</h5>
+         <h5 slot="value">{{getTime}}</h5>
        </Option>
     </section>
   </div>
@@ -34,7 +42,15 @@ export default {
   },
   computed:{
       ...mapState(['work','cycles','rest','time']),
-    
+      workTime(){
+        return this.$store.getters.getWork;
+      },
+      restTime(){
+        return this.$store.getters.getRest;
+      },
+      getTime(){
+        return this.$store.getters.getTime;
+      }
   },
   methods:{
     addCycles(){
@@ -42,6 +58,20 @@ export default {
     },
     deleteCycles(){
       this.$store.commit('deleteCycles');
+    },
+    addWorkTime(){
+      this.$store.commit('addWorkTime');
+    },
+    deleteWorkTime(){
+      this.$store.commit('deleteWorkTime');
+      
+    },
+    addRestTime(){
+      this.$store.commit('addRestTime');
+    },
+    deleteRestTime(){
+      this.$store.commit('deleteRestTime');
+      
     }
   }
 }
