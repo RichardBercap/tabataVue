@@ -3,10 +3,14 @@
     <h1>Tabata Timer</h1> 
     <Options/>
     <section class="main">
-      <div class="time_work" v-if="(!show_rest && !show_work)">
+      <div class="time_work" v-if="(!show_rest && !show_work && !showCountDown)">
           <h3>
             {{work_cycle}}
           </h3>
+      </div>
+      <div class="time_work" v-if="showCountDown">
+        <h3 class="text-center">Prepare</h3>
+        <h3 class="text-center">{{countdown}}</h3>  
       </div>
       <div class="time_work" v-if="show_work">
         <h3 class="text-center">Work</h3>
@@ -26,6 +30,8 @@
 
 <script>
 import Options from './components/Options.vue'
+
+import './assets/styles.css';
 
 export default {
   name: 'App',
@@ -61,6 +67,8 @@ export default {
   },
   data(){
     return{
+      countdown:5,
+      showCountDown:false,
       work_cycle:this.$store.getters.getWork,
       timer:{
         minute:0,
@@ -111,37 +119,56 @@ export default {
 
       
     },
-    start(){
-      this.timer.minute = this.$store.state.work.minute;
-      this.timer.seconds = this.$store.state.work.seconds;
-      this.timer_rest.minute = this.$store.state.rest.minute;
-      this.timer_rest.seconds = this.$store.state.rest.seconds;
-      
-      this.show_work = true;
-      let interval = setInterval(()=>{
+    before(){
+      return new Promise((resolve)=>{
+        this.showCountDown = true;
+        let setBefore = setInterval(()=>{
+          this.countdown--;
+          if(this.countdown == 0){
+            clearInterval(setBefore);
+            this.countdown = 5;
+            this.showCountDown = false;
+            resolve();
+          }
+        },1000);
         
-        if(this.cycles == 0){
+      });
+    },
+    start(){
+      this.before().then(()=>{
+        this.timer.minute = this.$store.state.work.minute;
+        this.timer.seconds = this.$store.state.work.seconds;
+        this.timer_rest.minute = this.$store.state.rest.minute;
+        this.timer_rest.seconds = this.$store.state.rest.seconds;
+        this.cycles = this.$store.state.cycles;
+        
+        this.show_work = true;
+        let interval = setInterval(()=>{
           
-          this.cycles = this.$store.state.cycles;
+          if(this.cycles == 0){
+            
+            this.cycles = this.$store.state.cycles;
 
-          this.timer.minute = this.$store.state.work.minute;
-          this.timer.seconds = this.$store.state.work.seconds;
-          this.timer_rest.minute = this.$store.state.rest.minute;
-          this.timer_rest.seconds = this.$store.state.rest.seconds;
-          this.show_work = false;
-          this.show_rest = false;
-          clearInterval(interval);
-        }
-        if(this.show_rest){
-          this.rest_start();
-         
-        }
-        if(this.show_work){
-          this.work_start();
+            this.timer.minute = this.$store.state.work.minute;
+            this.timer.seconds = this.$store.state.work.seconds;
+            this.timer_rest.minute = this.$store.state.rest.minute;
+            this.timer_rest.seconds = this.$store.state.rest.seconds;
+            this.show_work = false;
+            this.show_rest = false;
+            clearInterval(interval);
+          }
+          if(this.show_rest){
+            this.rest_start();
           
-        }
+          }
+          if(this.show_work){
+            this.work_start();
+            
+          }
         
       },1000);
+      });
+      
     }
   }
 }
