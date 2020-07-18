@@ -4,6 +4,7 @@ import App from './App.vue'
 
 import Store from './store';
 
+//import './assets/bulma.css';
 
 Vue.config.productionTip = false
 
